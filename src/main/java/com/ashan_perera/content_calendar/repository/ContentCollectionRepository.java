@@ -16,20 +16,34 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ContentCollectionRepository {
 
-    private final List<Content> content = new ArrayList<>();
+    private final List<Content> contentList = new ArrayList<>();
 
     public ContentCollectionRepository() {
     }
 
     public List<Content> findAll(){
-        return content;
+        return contentList;
     }
 
     public Optional<Content> findById(Integer id){
-        return content.stream().filter(c -> c.id().equals(id)).findFirst();
+        return contentList.stream().filter(c -> c.id().equals(id)).findFirst();
     }
 
-    //this annotation will run after dependancy injecrion
+    public Content createContent(Content content){
+        contentList.removeIf(c -> c.id().equals(content.id()));
+        contentList.add(content);
+        return content;
+    }
+
+    public void deleteContent(Integer id){
+        contentList.removeIf(c -> c.id().equals(id));
+    }
+
+    public Boolean isContentExist(Integer id){
+        return contentList.stream().filter(c -> c.id().equals(id)).count() == 1;
+    }
+
+    //this annotation will run after dependancy injection
     @PostConstruct
     public void init(){
         Content c = new Content(
@@ -43,7 +57,7 @@ public class ContentCollectionRepository {
             ""
         );
 
-        content.add(c);
+        contentList.add(c);
     }
 
 }
