@@ -19,6 +19,8 @@ import org.springframework.web.server.ResponseStatusException;
 import com.ashan_perera.content_calendar.model.Content;
 import com.ashan_perera.content_calendar.repository.ContentCollectionRepository;
 
+import jakarta.validation.Valid;
+
 @RestController
 @CrossOrigin
 @RequestMapping("/api/content")
@@ -46,14 +48,14 @@ public class ContentController {
     // Create
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
-    public Content create(@RequestBody Content content){
+    public Content create(@Valid @RequestBody Content content){
         return repository.createContent(content);
     }
     
     //Update
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{id}")
-    public Content update(@PathVariable Integer id, @RequestBody Content content){
+    public Content update(@PathVariable Integer id, @Valid @RequestBody Content content){
         if(!repository.isContentExist(id)){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Invalid content Id");
         }
