@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.ashan_perera.content_calendar.model.Content;
+import com.ashan_perera.content_calendar.model.Status;
 import com.ashan_perera.content_calendar.repository.ContentCollectionRepository;
 import com.ashan_perera.content_calendar.repository.ContentRepository;
 
@@ -82,5 +83,10 @@ public class ContentController {
     @GetMapping("/search")
     public List<Content> search(@RequestParam String title){
         return repository.findAllByTitleContains(title);
+    }
+
+    @GetMapping("/filter/status/{status}")
+    public List<Content> filterStatus(@PathVariable Status status){
+        return repository.listByStatus(status);
     }
 }
