@@ -18,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.ashan_perera.content_calendar.model.Content;
 import com.ashan_perera.content_calendar.repository.ContentCollectionRepository;
+import com.ashan_perera.content_calendar.repository.ContentRepository;
 
 import jakarta.validation.Valid;
 
@@ -26,10 +27,14 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/content")
 public class ContentController {
 
-    private final ContentCollectionRepository repository;
+    // Custom repository
+    // private final ContentCollectionRepository repository;
+    
+    // JDBC repository
+    private final ContentRepository repository;
 
     // auto wire the repository instance available in the application to the controller
-    public ContentController(ContentCollectionRepository repository){
+    public ContentController(ContentRepository repository){
         this.repository = repository;
     }
 
@@ -49,27 +54,27 @@ public class ContentController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
     public Content create(@Valid @RequestBody Content content){
-        return repository.createContent(content);
+        return repository.save(content);
     }
     
     //Update
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{id}")
     public Content update(@PathVariable Integer id, @Valid @RequestBody Content content){
-        if(!repository.isContentExist(id)){
+        if(!repository.existsById(id)){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Invalid content Id");
         }
-        return repository.createContent(content);
+        return repository.save(content);
     }
 
     // Delete
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Integer id){
-        if(!repository.isContentExist(id)){
+        if(!repository.existsById(id)){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Invalid content Id");
         }
-        repository.deleteContent(id);
+        repository.deleteById(id);
     }
 
 }
